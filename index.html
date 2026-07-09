@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>How to Play — Ruffin Manor</title>
+
+	<link rel="icon" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<meta name="theme-color" content="#1b1b22">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="How to Play">
+
+	<style>
+		:root {
+			--bg: #14131a;
+			--panel: #1f1e28;
+			--panel2: #262533;
+			--ink: #ededf2;
+			--muted: #a6a4b4;
+			--pumpkin: #ff9f1a;
+			--toxic: #7dff3a;
+			--red: #ff5252;
+			--green: #3ad07a;
+			--blue: #4da3ff;
+			--orange: #ff9f1a;
+			--freeplay: #3ad07a;
+			--frenzy: #ff9f1a;
+			--haunting: #b072ff;
+			--poltergeist: #35d6d6;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			padding: 0 16px 48px;
+			background:
+				radial-gradient(1200px 500px at 50% -120px, #2a1c3a 0%, rgba(42,28,58,0) 60%),
+				var(--bg);
+			color: var(--ink);
+			font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+			line-height: 1.5;
+			-webkit-text-size-adjust: 100%;
+		}
+
+		.wrap { max-width: 760px; margin: 0 auto; }
+
+		header {
+			text-align: center;
+			padding: 28px 0 8px;
+		}
+
+		header img {
+			width: 84px; height: 84px;
+			filter: drop-shadow(0 0 14px rgba(255, 159, 26, 0.45));
+		}
+
+		h1 {
+			font-size: clamp(1.6rem, 6vw, 2.3rem);
+			margin: 10px 0 2px;
+			letter-spacing: 0.5px;
+		}
+
+		.subtitle { color: var(--pumpkin); font-weight: 600; margin: 0 0 6px; }
+
+		.intro {
+			color: var(--muted);
+			text-align: center;
+			max-width: 560px;
+			margin: 8px auto 24px;
+		}
+
+		.teams {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
+			margin: 0 auto 30px;
+		}
+
+		.team {
+			font-weight: 700;
+			font-size: 0.85rem;
+			padding: 6px 14px;
+			border-radius: 999px;
+			background: var(--panel2);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+		}
+		.team.red { color: var(--red); }
+		.team.green { color: var(--green); }
+		.team.blue { color: var(--blue); }
+		.team.orange { color: var(--orange); }
+
+		.section-label {
+			text-align: center;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			font-size: 0.75rem;
+			color: var(--muted);
+			margin: 0 0 14px;
+		}
+
+		.modes { display: grid; gap: 16px; }
+
+		.mode {
+			background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+			border-radius: 16px;
+			border: 1px solid rgba(255, 255, 255, 0.06);
+			border-left: 5px solid var(--accent, #666);
+			padding: 18px 18px 16px;
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+		}
+
+		.mode-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+		.mode-icon { font-size: 1.9rem; line-height: 1; }
+		.mode-name {
+			font-size: 1.35rem;
+			font-weight: 800;
+			color: var(--accent);
+			letter-spacing: 0.5px;
+		}
+		.mode-tag { color: var(--muted); font-size: 0.85rem; font-style: italic; margin: 0 0 10px; }
+		.mode p { margin: 0 0 10px; }
+		.mode p:last-child { margin-bottom: 0; }
+
+		.mode .how {
+			display: flex; gap: 10px; align-items: baseline;
+			background: rgba(0, 0, 0, 0.22);
+			border-radius: 10px;
+			padding: 8px 12px;
+			margin-top: 10px;
+			font-size: 0.92rem;
+		}
+		.mode .how b { color: var(--accent); min-width: 44px; flex: none; }
+
+		.mode.freeplay { --accent: var(--freeplay); }
+		.mode.frenzy { --accent: var(--frenzy); }
+		.mode.haunting { --accent: var(--haunting); }
+		.mode.poltergeist { --accent: var(--poltergeist); }
+
+		footer {
+			text-align: center;
+			color: var(--muted);
+			margin-top: 30px;
+			font-size: 0.85rem;
+		}
+		footer .big { color: var(--toxic); font-weight: 700; letter-spacing: 1px; }
+
+		/* ---- Light theme (toggle top-right; shares the console's saved choice) ---- */
+		body.light {
+			--bg: #eceef3;
+			--panel: #ffffff;
+			--panel2: #f3f4f8;
+			--ink: #1b1b22;
+			--muted: #5f5d6b;
+			--toxic: #1f9e4a;
+			--freeplay: #22a35f;
+			--frenzy: #e07d10;
+			--haunting: #8a3ff0;
+			--poltergeist: #0f9a9a;
+			background:
+				radial-gradient(1200px 520px at 50% -140px, #ffffff 0%, rgba(255, 255, 255, 0) 55%),
+				var(--bg);
+		}
+		body.light .team { border-color: rgba(0, 0, 0, 0.10); }
+		body.light .mode { border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10); }
+		body.light .mode .how { background: rgba(0, 0, 0, 0.05); }
+
+		.theme-toggle {
+			position: fixed;
+			top: 12px;
+			right: 12px;
+			width: 38px;
+			height: 38px;
+			border: none;
+			border-radius: 999px;
+			background: rgba(130, 130, 145, 0.18);
+			color: var(--ink);
+			font-size: 18px;
+			line-height: 1;
+			cursor: pointer;
+			z-index: 10;
+		}
+		.theme-toggle:hover { background: rgba(130, 130, 145, 0.32); }
+	</style>
+</head>
+
+<body>
+	<button id="themeToggle" class="theme-toggle" onclick="toggleTheme();" title="Toggle dark / light">🌙</button>
+	<div class="wrap">
+		<header>
+			<img src="pumpkin.png" alt="jack-o'-lantern">
+			<h1>Ruffin Manor Shooting Gallery</h1>
+			<p class="subtitle">How to Play</p>
+		</header>
+
+		<p class="intro">
+			Grab a blaster, pick your team color, and tag the glowing targets. Every hit lands
+			on the big scoreboard — it counts you down, keeps score, and crowns the winner.
+		</p>
+
+		<div class="teams">
+			<span class="team red">● Red</span>
+			<span class="team green">● Green</span>
+			<span class="team blue">● Blue</span>
+			<span class="team orange">● Orange</span>
+		</div>
+
+		<p class="section-label">Tonight's Games</p>
+
+		<div class="modes">
+			<div class="mode freeplay">
+				<div class="mode-head"><span class="mode-icon">🎯</span><span class="mode-name">Free Play</span></div>
+				<p class="mode-tag">Warm up. No clock, no pressure.</p>
+				<p>Every target is live. Blast anything you can see and rack up points for your color.
+					Perfect for finding your aim before the real games begin.</p>
+				<div class="how"><b>Win</b><span>Just for fun — play as long as you like.</span></div>
+			</div>
+
+			<div class="mode frenzy">
+				<div class="mode-head"><span class="mode-icon">⚡</span><span class="mode-name">Frenzy</span></div>
+				<p class="mode-tag">Beat the clock. Pure speed and chaos.</p>
+				<p>When the countdown hits <b>GO!</b>, fire at every target you can — each hit scores a point.
+					Targets reset fast, so keep pulling the trigger. About two minutes of madness.</p>
+				<div class="how"><b>Win</b><span>Most hits when time runs out takes it.</span></div>
+			</div>
+
+			<div class="mode haunting">
+				<div class="mode-head"><span class="mode-icon">👻</span><span class="mode-name">Haunting</span></div>
+				<p class="mode-tag">Claim your territory… and hold it.</p>
+				<p>Every target you hit turns <b>your color</b> — you've haunted it. But rivals can steal it
+					back by tagging it themselves, so the map keeps shifting. Guard your ground and grab theirs.</p>
+				<div class="how"><b>Win</b><span>Haunting the most targets when the clock hits zero.</span></div>
+			</div>
+
+			<div class="mode poltergeist">
+				<div class="mode-head"><span class="mode-icon">🌀</span><span class="mode-name">Poltergeist</span></div>
+				<p class="mode-tag">Chase the ghost. It won't sit still.</p>
+				<p>Only <b>one</b> target wakes at a time — hit it and it vanishes, then pops up somewhere else
+					in a flash. It gets faster and faster as the 90 seconds tick down. Quick reflexes score big.</p>
+				<div class="how"><b>Win</b><span>Most catches before the poltergeist wears you out.</span></div>
+			</div>
+		</div>
+
+		<footer>
+			Miss a shot? The spirits are watching. 👁️<br>
+			<span class="big">GOOD LUCK — AND HAPPY HAUNTING.</span>
+		</footer>
+	</div>
+
+	<script>
+		function el(id) { return document.getElementById(id); }
+		function applyTheme(dark) {
+			document.body.classList.toggle("light", !dark);   // default (no class) = dark
+			const t = el("themeToggle");
+			if (t) { t.textContent = dark ? "☀️" : "🌙"; }
+			const m = document.querySelector('meta[name="theme-color"]');
+			if (m) { m.setAttribute("content", dark ? "#14131a" : "#eceef3"); }
+		}
+		function toggleTheme() {
+			const dark = document.body.classList.contains("light");   // currently light -> switch to dark
+			applyTheme(dark);
+			try { localStorage.setItem("halloweenTheme", dark ? "dark" : "light"); } catch (e) {}
+		}
+		(function () {
+			let saved = null;
+			try { saved = localStorage.getItem("halloweenTheme"); } catch (e) {}
+			const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+			applyTheme(saved ? saved === "dark" : prefersDark);
+		})();
+	</script>
+</body>
+
+</html>

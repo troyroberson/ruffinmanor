@@ -1,5 +1,7 @@
 # Ruffin Manor
 
+**Live site (How to Play): https://troyroberson.github.io/ruffinmanor/**
+
 Ruffin Manor is an interactive Halloween trick-or-treat display: players stay behind a
 fence and shoot IR "guns" at 20 animated targets scattered around the yard, competing for
 score on a large LED scoreboard. This repo is the **public distribution point** for the
