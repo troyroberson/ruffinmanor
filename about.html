@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>About — Ruffin Manor</title>
+
+	<link rel="icon" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<meta name="theme-color" content="#1b1b22">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="About">
+
+	<style>
+		:root {
+			--bg: #14131a;
+			--panel: #1f1e28;
+			--panel2: #262533;
+			--ink: #ededf2;
+			--muted: #a6a4b4;
+			--pumpkin: #ff9f1a;
+			--toxic: #7dff3a;
+			--targets: #ff9f1a;
+			--scoreboard: #4da3ff;
+			--modebox: #b072ff;
+			--link: #7dff3a;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			padding: 0 16px 48px;
+			background:
+				radial-gradient(1200px 500px at 50% -120px, #2a1c3a 0%, rgba(42,28,58,0) 60%),
+				var(--bg);
+			color: var(--ink);
+			font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+			line-height: 1.5;
+			-webkit-text-size-adjust: 100%;
+		}
+
+		.wrap { max-width: 760px; margin: 0 auto; }
+
+		header {
+			text-align: center;
+			padding: 28px 0 8px;
+		}
+
+		header img {
+			width: 84px; height: 84px;
+			filter: drop-shadow(0 0 14px rgba(255, 159, 26, 0.45));
+		}
+
+		h1 {
+			font-size: clamp(1.6rem, 6vw, 2.3rem);
+			margin: 10px 0 2px;
+			letter-spacing: 0.5px;
+		}
+
+		.subtitle { color: var(--pumpkin); font-weight: 600; margin: 0 0 6px; }
+
+		.intro {
+			color: var(--muted);
+			text-align: center;
+			max-width: 560px;
+			margin: 8px auto 24px;
+		}
+
+		nav.crumbs {
+			text-align: center;
+			margin: 0 0 24px;
+			font-size: 0.9rem;
+		}
+		nav.crumbs a {
+			color: var(--link);
+			text-decoration: none;
+			font-weight: 600;
+		}
+		nav.crumbs a:hover { text-decoration: underline; }
+
+		.section-label {
+			text-align: center;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			font-size: 0.75rem;
+			color: var(--muted);
+			margin: 0 0 14px;
+		}
+
+		.cards { display: grid; gap: 16px; }
+
+		.card {
+			background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+			border-radius: 16px;
+			border: 1px solid rgba(255, 255, 255, 0.06);
+			border-left: 5px solid var(--accent, #666);
+			padding: 18px 18px 16px;
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+		}
+
+		.card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+		.card-icon { font-size: 1.9rem; line-height: 1; }
+		.card-name {
+			font-size: 1.35rem;
+			font-weight: 800;
+			color: var(--accent);
+			letter-spacing: 0.5px;
+		}
+		.card p { margin: 0 0 10px; }
+		.card p:last-child { margin-bottom: 0; }
+
+		.card.targets { --accent: var(--targets); }
+		.card.scoreboard { --accent: var(--scoreboard); }
+		.card.modebox { --accent: var(--modebox); }
+
+		table.downloads {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 0 auto 30px;
+			background: var(--panel);
+			border-radius: 12px;
+			overflow: hidden;
+			font-size: 0.92rem;
+		}
+		table.downloads th, table.downloads td {
+			padding: 10px 14px;
+			text-align: left;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		}
+		table.downloads th {
+			color: var(--muted);
+			text-transform: uppercase;
+			font-size: 0.72rem;
+			letter-spacing: 1px;
+		}
+		table.downloads tr:last-child td { border-bottom: none; }
+		table.downloads a { color: var(--link); font-weight: 600; text-decoration: none; }
+		table.downloads a:hover { text-decoration: underline; }
+		.version-tag {
+			display: inline-block;
+			background: rgba(255, 255, 255, 0.08);
+			border-radius: 999px;
+			padding: 2px 10px;
+			font-size: 0.82rem;
+			font-family: ui-monospace, Consolas, monospace;
+		}
+
+		footer {
+			text-align: center;
+			color: var(--muted);
+			margin-top: 30px;
+			font-size: 0.85rem;
+		}
+		footer a { color: var(--link); }
+
+		/* ---- Light theme (toggle top-right; shares the console's saved choice) ---- */
+		body.light {
+			--bg: #eceef3;
+			--panel: #ffffff;
+			--panel2: #f3f4f8;
+			--ink: #1b1b22;
+			--muted: #5f5d6b;
+			--toxic: #1f9e4a;
+			--targets: #e07d10;
+			--scoreboard: #1f6fd6;
+			--modebox: #8a3ff0;
+			--link: #1f9e4a;
+			background:
+				radial-gradient(1200px 520px at 50% -140px, #ffffff 0%, rgba(255, 255, 255, 0) 55%),
+				var(--bg);
+		}
+		body.light .card { border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10); }
+		body.light table.downloads { border: 1px solid rgba(0, 0, 0, 0.08); }
+		body.light table.downloads th, body.light table.downloads td { border-color: rgba(0, 0, 0, 0.08); }
+		body.light .version-tag { background: rgba(0, 0, 0, 0.06); }
+
+		.theme-toggle {
+			position: fixed;
+			top: 12px;
+			right: 12px;
+			width: 38px;
+			height: 38px;
+			border: none;
+			border-radius: 999px;
+			background: rgba(130, 130, 145, 0.18);
+			color: var(--ink);
+			font-size: 18px;
+			line-height: 1;
+			cursor: pointer;
+			z-index: 10;
+		}
+		.theme-toggle:hover { background: rgba(130, 130, 145, 0.32); }
+	</style>
+</head>
+
+<body>
+	<button id="themeToggle" class="theme-toggle" onclick="toggleTheme();" title="Toggle dark / light">🌙</button>
+	<div class="wrap">
+		<header>
+			<img src="pumpkin.png" alt="jack-o'-lantern">
+			<h1>Ruffin Manor</h1>
+			<p class="subtitle">About This Project</p>
+		</header>
+
+		<p class="intro">
+			Ruffin Manor is an interactive Halloween trick-or-treat display: players stay behind a
+			fence and shoot IR "guns" at animated targets scattered around the yard, competing for
+			score on a large LED scoreboard.
+		</p>
+
+		<nav class="crumbs"><a href="index.html">← How to Play</a></nav>
+
+		<p class="section-label">The Hardware</p>
+
+		<div class="cards">
+			<div class="card targets">
+				<div class="card-head"><span class="card-icon">🎯</span><span class="card-name">IR Targets</span></div>
+				<p>20 ESP32-based animated props scattered around the yard. Each one reacts to a hit
+					with its own sound, light, or movement, and reports back to the scoreboard over
+					the local network. Every target's firmware is unique — its name and behavior are
+					baked in at compile time.</p>
+			</div>
+
+			<div class="card scoreboard">
+				<div class="card-head"><span class="card-icon">🖥️</span><span class="card-name">Scoreboard</span></div>
+				<p>A 16×64 LED matrix display (built from four 16×32 panels) that runs the game modes
+					— Free Play, Frenzy, Haunting, and Poltergeist — and drives three physical control
+					buttons for starting a round without a phone or laptop.</p>
+			</div>
+
+			<div class="card modebox">
+				<div class="card-head"><span class="card-icon">🕹️</span><span class="card-name">Mode Box</span></div>
+				<p>A standalone control panel with 5 arcade buttons, one per game mode, for starting a
+					round from a table instead of the web console. <em>(Firmware coming soon.)</em></p>
+			</div>
+		</div>
+
+		<p class="section-label" style="margin-top: 30px;">Firmware Downloads</p>
+
+		<table class="downloads">
+			<thead>
+				<tr><th>Component</th><th>Binary</th><th>Version</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Scoreboard</td>
+					<td><a href="binaries/scoreboard/ITC32.ino.bin">ITC32.ino.bin</a></td>
+					<td><span class="version-tag" id="verScoreboard">…</span></td>
+				</tr>
+				<tr>
+					<td>Targets</td>
+					<td><a href="binaries/targets/ITC32.ino.bin">ITC32.ino.bin</a></td>
+					<td><span class="version-tag" id="verTargets">bench build</span></td>
+				</tr>
+				<tr>
+					<td>Mode Box</td>
+					<td>—</td>
+					<td><span class="version-tag">not yet published</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p class="intro" style="font-size: 0.85rem;">
+			These are backup/reference copies of the binaries used for over-the-air updates on the
+			live display — they aren't served to the hardware directly (the live OTA path runs over
+			the local network).
+		</p>
+
+		<footer>
+			<a href="https://github.com/troyroberson/ruffinmanor">View source on GitHub</a>
+		</footer>
+	</div>
+
+	<script>
+		function el(id) { return document.getElementById(id); }
+		function applyTheme(dark) {
+			document.body.classList.toggle("light", !dark);   // default (no class) = dark
+			const t = el("themeToggle");
+			if (t) { t.textContent = dark ? "☀️" : "🌙"; }
+			const m = document.querySelector('meta[name="theme-color"]');
+			if (m) { m.setAttribute("content", dark ? "#14131a" : "#eceef3"); }
+		}
+		function toggleTheme() {
+			const dark = document.body.classList.contains("light");   // currently light -> switch to dark
+			applyTheme(dark);
+			try { localStorage.setItem("halloweenTheme", dark ? "dark" : "light"); } catch (e) {}
+		}
+		(function () {
+			let saved = null;
+			try { saved = localStorage.getItem("halloweenTheme"); } catch (e) {}
+			const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+			applyTheme(saved ? saved === "dark" : prefersDark);
+		})();
+
+		// Fetch the live published version so this page never goes stale on its own.
+		fetch("binaries/scoreboard/version.htm").then(r => r.text()).then(v => {
+			const s = el("verScoreboard");
+			if (s) { s.textContent = v.trim(); }
+		}).catch(() => {});
+	</script>
+</body>
+
+</html>
