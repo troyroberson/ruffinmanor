@@ -218,10 +218,11 @@
 		<div class="cards">
 			<div class="card targets">
 				<div class="card-head"><span class="card-icon">🎯</span><span class="card-name">IR Targets</span></div>
-				<p>20 ESP32-based animated props scattered around the yard. Each one reacts to a hit
+				<p>ESP32-based animated props scattered around the yard. Each one reacts to a hit
 					with its own sound, light, or movement, and reports back to the scoreboard over
-					the local network. Every target's firmware is unique — its name and behavior are
-					baked in at compile time.</p>
+					the local network. Every target runs the same firmware image — a box is given its
+					name, description, and timing on the device itself at first boot, through a setup
+					page it serves over its own Wi-Fi, so adding a target never means a custom build.</p>
 			</div>
 
 			<div class="card scoreboard">
@@ -234,7 +235,8 @@
 			<div class="card modebox">
 				<div class="card-head"><span class="card-icon">🕹️</span><span class="card-name">Mode Box</span></div>
 				<p>A standalone control panel with 5 arcade buttons, one per game mode, for starting a
-					round from a table instead of the web console. <em>(Firmware coming soon.)</em></p>
+					round from a table instead of the web console. <em>(Firmware built and bench-tested;
+					binary not published here yet.)</em></p>
 			</div>
 		</div>
 
@@ -253,7 +255,7 @@
 				<tr>
 					<td>Targets</td>
 					<td><a href="binaries/targets/ITC32.ino.bin">ITC32.ino.bin</a></td>
-					<td><span class="version-tag" id="verTargets">bench build</span></td>
+					<td><span class="version-tag" id="verTargets">…</span></td>
 				</tr>
 				<tr>
 					<td>Mode Box</td>
@@ -295,11 +297,16 @@
 			applyTheme(saved ? saved === "dark" : prefersDark);
 		})();
 
-		// Fetch the live published version so this page never goes stale on its own.
-		fetch("binaries/scoreboard/version.htm").then(r => r.text()).then(v => {
-			const s = el("verScoreboard");
-			if (s) { s.textContent = v.trim(); }
-		}).catch(() => {});
+		// Fetch the live published versions so this page never goes stale on its own.
+		// Targets are one shared image now, so it has a real version like the
+		// scoreboard does rather than a hand-written "bench build" label.
+		[["binaries/scoreboard/version.htm", "verScoreboard"],
+		 ["binaries/targets/version.htm", "verTargets"]].forEach(([url, id]) => {
+			fetch(url).then(r => r.text()).then(v => {
+				const s = el(id);
+				if (s) { s.textContent = v.trim(); }
+			}).catch(() => {});
+		});
 	</script>
 </body>
 
