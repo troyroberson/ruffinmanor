@@ -88,21 +88,31 @@
 			margin: 0 0 14px;
 		}
 
+		/* MASONRY, NOT A SQUARE GRID, and the reason is the source material. These are
+		   iPhone shots: portrait photos come in at 1980x3520 and the clips are 1080x1920.
+		   The old layout locked every tile to aspect-ratio 1/1 with object-fit: cover,
+		   which centre-crops a 9:16 portrait down to a square and throws away most of
+		   the frame -- the exact orientation the media was corrected to preserve.
+		   CSS columns lets every tile keep its own shape, so a portrait reads as
+		   portrait and a landscape as landscape. */
 		.grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 10px;
+			column-count: 2;
+			column-gap: 10px;
+		}
+		.grid > * {
+			break-inside: avoid;          /* or a tile splits across a column boundary */
+			margin: 0 0 10px;
 		}
 		@media (min-width: 560px) {
-			.grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+			.grid { column-count: 3; column-gap: 12px; }
+			.grid > * { margin-bottom: 12px; }
 		}
 		@media (min-width: 780px) {
-			.grid { grid-template-columns: repeat(4, 1fr); }
+			.grid { column-count: 4; }
 		}
 
 		.tile {
 			position: relative;
-			aspect-ratio: 1 / 1;
 			border-radius: 14px;
 			overflow: hidden;
 			border: 1px solid rgba(255, 255, 255, 0.08);
@@ -111,13 +121,52 @@
 			padding: 0;
 			display: block;
 			width: 100%;
+			transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+		}
+		/* Hover only where there IS a hover: on touch this would latch on after a tap
+		   and leave a tile stuck looking selected. */
+		@media (hover: hover) {
+			.tile:hover {
+				transform: translateY(-3px);
+				border-color: rgba(255, 159, 26, 0.55);
+				box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 159, 26, 0.15);
+			}
+			.tile:hover img, .tile:hover video { transform: scale(1.04); }
+		}
+		.tile:focus-visible {
+			outline: 2px solid var(--pumpkin);
+			outline-offset: 2px;
 		}
 		.tile img, .tile video {
 			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			height: auto;              /* let the media keep its own aspect ratio */
 			display: block;
 			background: var(--panel2);
+			transition: transform 0.35s ease;
+		}
+		/* The manifest carries each item's pixel dimensions, and this is what they are
+		   for: the browser reserves the right box before the file arrives, so the grid
+		   does not reflow as 58 photos load in. */
+		.tile .media-box { display: block; width: 100%; }
+
+		@media (prefers-reduced-motion: reduce) {
+			.tile, .tile img, .tile video { transition: none; }
+			.tile:hover { transform: none; }
+			.tile:hover img, .tile:hover video { transform: none; }
+		}
+
+		.tile .dur-badge {
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			padding: 2px 7px;
+			border-radius: 999px;
+			font-size: 0.7rem;
+			font-variant-numeric: tabular-nums;
+			color: #fff;
+			background: rgba(0, 0, 0, 0.6);
+			backdrop-filter: blur(3px);
+			pointer-events: none;
 		}
 		.tile .play-badge {
 			position: absolute;
@@ -145,6 +194,34 @@
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+
+		/* Delineator between the photo and video sections. A rule that fades out at both
+		   ends rather than a hard line, with the pumpkin sitting in a gap punched in the
+		   middle -- the background has to match the page or the glyph looks pasted on a
+		   line running behind it. */
+		.section-divider {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			margin: 34px 0 6px;
+			color: var(--muted);
+		}
+		.section-divider::before,
+		.section-divider::after {
+			content: "";
+			flex: 1;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+		}
+		body.light .section-divider::before,
+		body.light .section-divider::after {
+			background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.18), transparent);
+		}
+		.section-divider span {
+			font-size: 1.15rem;
+			line-height: 1;
+			opacity: 0.85;
 		}
 
 		.empty-state {
@@ -199,6 +276,41 @@
 			cursor: pointer;
 		}
 		.lightbox .lb-close:hover { background: rgba(130, 130, 145, 0.36); }
+
+		.lightbox .lb-nav {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 46px;
+			height: 66px;
+			border: none;
+			border-radius: 12px;
+			background: rgba(130, 130, 145, 0.18);
+			color: #fff;
+			font-size: 30px;
+			line-height: 1;
+			cursor: pointer;
+			transition: background 0.18s ease;
+			z-index: 2;
+		}
+		.lightbox .lb-nav:hover { background: rgba(255, 159, 26, 0.35); }
+		.lightbox .lb-prev { left: 10px; }
+		.lightbox .lb-next { right: 10px; }
+		.lightbox .lb-count {
+			position: absolute;
+			bottom: 14px;
+			left: 0; right: 0;
+			text-align: center;
+			color: var(--muted);
+			font-size: 0.8rem;
+			font-variant-numeric: tabular-nums;
+			pointer-events: none;
+		}
+		/* On a narrow screen the arrows would sit on top of the picture, so they go
+		   away and the swipe handler carries the same job. */
+		@media (max-width: 620px) {
+			.lightbox .lb-nav { display: none; }
+		}
 
 		footer {
 			text-align: center;
@@ -259,9 +371,17 @@
 
 		<nav class="crumbs"><a href="index.html">← How to Play</a> &nbsp;·&nbsp; <a href="about.html">About this project</a></nav>
 
-		<p class="section-label" id="gridLabel">From Past Events</p>
+		<section id="photoSection">
+			<p class="section-label">Photos</p>
+			<div class="grid" id="photoGrid"></div>
+		</section>
 
-		<div class="grid" id="grid"></div>
+		<div class="section-divider" id="sectionDivider" aria-hidden="true"><span>🎃</span></div>
+
+		<section id="videoSection">
+			<p class="section-label">Video</p>
+			<div class="grid" id="videoGrid"></div>
+		</section>
 
 		<div class="empty-state" id="emptyState" style="display:none;">
 			<div class="icon">🎃</div>
@@ -276,8 +396,11 @@
 	</div>
 
 	<div class="lightbox" id="lightbox">
-		<button class="lb-close" onclick="closeLightbox();" title="Close">✕</button>
+		<button class="lb-close" onclick="closeLightbox();" title="Close" aria-label="Close">✕</button>
+		<button class="lb-nav lb-prev" onclick="step(-1);" title="Previous" aria-label="Previous">‹</button>
 		<div class="lightbox-inner" id="lightboxInner"></div>
+		<button class="lb-nav lb-next" onclick="step(1);" title="Next" aria-label="Next">›</button>
+		<div class="lb-count" id="lbCount"></div>
 	</div>
 
 	<script>
@@ -301,7 +424,17 @@
 			applyTheme(saved ? saved === "dark" : prefersDark);
 		})();
 
-		function openLightbox(item) {
+		// ORDERED[] is the lightbox's world: photos then videos, the same order the two
+		// sections are rendered in, so stepping with the arrows walks the page as it
+		// looks rather than as the manifest happens to be sorted.
+		let ORDERED = [];
+		let CURRENT = -1;
+		let RETURN_FOCUS = null;
+
+		function openLightbox(index) {
+			CURRENT = index;
+			const item = ORDERED[index];
+			if (!item) return;
 			const inner = el("lightboxInner");
 			inner.innerHTML = "";
 			if (item.type === "video") {
@@ -324,43 +457,110 @@
 				cap.textContent = item.caption;
 				inner.appendChild(cap);
 			}
-			el("lightbox").classList.add("open");
+			const count = el("lbCount");
+			if (count) count.textContent = (index + 1) + " / " + ORDERED.length;
+			const lb = el("lightbox");
+			const firstOpen = !lb.classList.contains("open");
+			lb.classList.add("open");
+			document.body.style.overflow = "hidden";     // stop the page scrolling behind
+			// Move focus INTO the dialog, but only when it first opens -- doing it on
+			// every step would yank focus off the video controls mid-playback. Remember
+			// where focus came from so closing can put it back on the tile, otherwise a
+			// keyboard user is dumped at the top of the document.
+			if (firstOpen) {
+				RETURN_FOCUS = document.activeElement;
+				const c = lb.querySelector(".lb-close");
+				if (c) c.focus();
+			}
 		}
+
+		function step(delta) {
+			if (CURRENT < 0 || !ORDERED.length) return;
+			// Wrap, so the last photo steps to the first and there is never a dead arrow.
+			openLightbox((CURRENT + delta + ORDERED.length) % ORDERED.length);
+		}
+
 		function closeLightbox() {
 			el("lightbox").classList.remove("open");
+			// Clearing innerHTML is what actually stops playback -- pausing the element
+			// is not enough once it has been replaced.
 			el("lightboxInner").innerHTML = "";
+			document.body.style.overflow = "";
+			CURRENT = -1;
+			if (RETURN_FOCUS && RETURN_FOCUS.focus) RETURN_FOCUS.focus();
+			RETURN_FOCUS = null;
 		}
 		el("lightbox").addEventListener("click", function (e) {
 			if (e.target === this) closeLightbox();
 		});
 		document.addEventListener("keydown", function (e) {
-			if (e.key === "Escape") closeLightbox();
+			if (!el("lightbox").classList.contains("open")) return;
+			if (e.key === "Escape") { closeLightbox(); return; }
+			if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+			if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
 		});
+
+		// Swipe, for the phones this will mostly be read on. 45 px of travel and a
+		// mostly-horizontal gesture, so it does not fight scrolling or a video scrub.
+		(function () {
+			let x0 = null, y0 = null;
+			const lb = el("lightbox");
+			lb.addEventListener("touchstart", function (e) {
+				const t = e.changedTouches[0]; x0 = t.clientX; y0 = t.clientY;
+			}, { passive: true });
+			lb.addEventListener("touchend", function (e) {
+				if (x0 === null) return;
+				const t = e.changedTouches[0];
+				const dx = t.clientX - x0, dy = t.clientY - y0;
+				if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+				x0 = y0 = null;
+			}, { passive: true });
+		})();
+
+		function showEmpty() {
+			["photoSection", "videoSection", "sectionDivider"].forEach(function (id) {
+				const n = el(id);
+				if (n) n.style.display = "none";
+			});
+			el("emptyState").style.display = "block";
+		}
 
 		function playBadge() {
 			return '<span class="play-badge"><svg viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"></polygon></svg></span>';
 		}
 
-		function renderTile(item) {
+		function fmtDur(s) {
+			if (!s && s !== 0) return "";
+			const m = Math.floor(s / 60), r = Math.round(s % 60);
+			return m + ":" + (r < 10 ? "0" : "") + r;
+		}
+
+		function renderTile(item, index) {
 			const btn = document.createElement("button");
 			btn.className = "tile";
 			btn.type = "button";
 			btn.setAttribute("aria-label", item.caption || (item.type === "video" ? "Play video" : "View photo"));
 
+			// EVERY TILE IS AN <img>, videos included -- the poster frame, not a <video>.
+			// The old version put a real <video preload="metadata"> in all 48 video
+			// tiles, which is 48 media requests and 48 decoders before anyone clicks
+			// anything. The player is created in the lightbox, once, on demand.
+			const img = document.createElement("img");
+			img.src = item.type === "video" ? (item.poster || item.src) : (item.thumb || item.src);
+			img.alt = item.caption || "";
+			img.loading = "lazy";
+			img.decoding = "async";
+			if (item.w && item.h) { img.width = item.w; img.height = item.h; }
+			btn.appendChild(img);
+
 			if (item.type === "video") {
-				const v = document.createElement("video");
-				v.src = item.src + "#t=0.1";
-				v.muted = true;
-				v.preload = "metadata";
-				if (item.poster) v.poster = item.poster;
-				btn.appendChild(v);
 				btn.insertAdjacentHTML("beforeend", playBadge());
-			} else {
-				const img = document.createElement("img");
-				img.src = item.thumb || item.src;
-				img.alt = item.caption || "";
-				img.loading = "lazy";
-				btn.appendChild(img);
+				if (item.dur) {
+					const d = document.createElement("span");
+					d.className = "dur-badge";
+					d.textContent = fmtDur(item.dur);
+					btn.appendChild(d);
+				}
 			}
 
 			if (item.caption) {
@@ -370,7 +570,7 @@
 				btn.appendChild(cap);
 			}
 
-			btn.addEventListener("click", function () { openLightbox(item); });
+			btn.addEventListener("click", function () { openLightbox(index); });
 			return btn;
 		}
 
@@ -378,20 +578,28 @@
 			.then(function (r) { return r.json(); })
 			.then(function (data) {
 				const items = (data && data.items) || [];
-				const grid = el("grid");
-				if (items.length === 0) {
-					grid.style.display = "none";
-					el("gridLabel").style.display = "none";
-					el("emptyState").style.display = "block";
-					return;
-				}
-				items.forEach(function (item) { grid.appendChild(renderTile(item)); });
+				if (items.length === 0) { showEmpty(); return; }
+
+				const photos = items.filter(function (i) { return i.type !== "video"; });
+				const videos = items.filter(function (i) { return i.type === "video"; });
+
+				// Build the lightbox order FIRST and hand each tile its index into it,
+				// so arrow-stepping matches the on-screen order: all photos, then all
+				// videos. Using the raw manifest index would make the arrows jump
+				// between the two sections.
+				ORDERED = photos.concat(videos);
+				let n = 0;
+				photos.forEach(function (i) { el("photoGrid").appendChild(renderTile(i, n++)); });
+				videos.forEach(function (i) { el("videoGrid").appendChild(renderTile(i, n++)); });
+
+				// Hide a section that has nothing in it, and the divider unless BOTH
+				// sections are showing -- a divider under a lone section is a rule
+				// separating something from nothing.
+				el("photoSection").style.display = photos.length ? "" : "none";
+				el("videoSection").style.display = videos.length ? "" : "none";
+				el("sectionDivider").style.display = (photos.length && videos.length) ? "" : "none";
 			})
-			.catch(function () {
-				el("grid").style.display = "none";
-				el("gridLabel").style.display = "none";
-				el("emptyState").style.display = "block";
-			});
+			.catch(showEmpty);
 	</script>
 </body>
 
