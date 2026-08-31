@@ -371,16 +371,16 @@
 
 		<nav class="crumbs"><a href="index.html">← How to Play</a> &nbsp;·&nbsp; <a href="about.html">About this project</a></nav>
 
-		<section id="photoSection">
-			<p class="section-label">Photos</p>
-			<div class="grid" id="photoGrid"></div>
+		<section id="videoSection">
+			<p class="section-label">Video</p>
+			<div class="grid" id="videoGrid"></div>
 		</section>
 
 		<div class="section-divider" id="sectionDivider" aria-hidden="true"><span>🎃</span></div>
 
-		<section id="videoSection">
-			<p class="section-label">Video</p>
-			<div class="grid" id="videoGrid"></div>
+		<section id="photoSection">
+			<p class="section-label">Photos</p>
+			<div class="grid" id="photoGrid"></div>
 		</section>
 
 		<div class="empty-state" id="emptyState" style="display:none;">
@@ -584,13 +584,14 @@
 				const videos = items.filter(function (i) { return i.type === "video"; });
 
 				// Build the lightbox order FIRST and hand each tile its index into it,
-				// so arrow-stepping matches the on-screen order: all photos, then all
-				// videos. Using the raw manifest index would make the arrows jump
-				// between the two sections.
-				ORDERED = photos.concat(videos);
+				// so arrow-stepping matches the on-screen order: all videos, then all
+				// photos. This has to stay in step with the section order in the markup
+				// above -- swap one without the other and the arrows jump between
+				// sections instead of walking the page.
+				ORDERED = videos.concat(photos);
 				let n = 0;
-				photos.forEach(function (i) { el("photoGrid").appendChild(renderTile(i, n++)); });
 				videos.forEach(function (i) { el("videoGrid").appendChild(renderTile(i, n++)); });
+				photos.forEach(function (i) { el("photoGrid").appendChild(renderTile(i, n++)); });
 
 				// Hide a section that has nothing in it, and the divider unless BOTH
 				// sections are showing -- a divider under a lone section is a rule
